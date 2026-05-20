@@ -35,7 +35,7 @@ class NewsCog(commands.Cog):
     def cog_unload(self):
         self.check_news.cancel()
 
-    @tasks.loop(minutes=30)
+    @tasks.loop(minutes=15)
     async def check_news(self):
         seen = load_seen()
         first_run = len(seen) == 0

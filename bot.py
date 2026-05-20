@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import os
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -18,6 +19,6 @@ async def on_message(message):
     await bot.process_commands(message)
 
 with open("token.txt") as f:
-    token = f.read().strip()
+    token = os.getenv("DISCORD_TOKEN")
 
 bot.run(token)

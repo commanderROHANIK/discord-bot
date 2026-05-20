@@ -1,6 +1,1 @@
-{
-    "Telex": "https://telex.hu/rss",
-    "HVG": "https://hvg.hu/rss",
-    "444": "https://444.hu/feed",
-    "Portfolio": "https://www.portfolio.hu/rss/all.xml"
-}
+{"Telex": "https://telex.hu/rss", "HVG": "https://hvg.hu/rss", "444": "https://444.hu/feed", "Portfolio": "https://www.portfolio.hu/rss/all.xml", "Mobilarena": "https://mobilarena.hu/hirfolyam/hirek/rss.xml"}

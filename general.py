@@ -1,5 +1,6 @@
 import discord
 import psutil
+import news
 import asyncio
 from discord.ext import commands
 
