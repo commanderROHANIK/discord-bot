@@ -6,8 +6,12 @@ from discord.ext import commands, tasks
 
 KEYWORDS_FILE = "keywords.json"
 SEEN_FILE = "seen_articles.json"
-NEWS_CHANNEL_NAME = "general"
 FEEDS_FILE = "feeds.json"
+CONFIG_FILE = "config.json"
+
+def load_config():
+    with open(CONFIG_FILE) as f:
+        return json.load(f)
 
 def load_feeds():
     with open(FEEDS_FILE) as f:
@@ -39,7 +43,7 @@ class NewsCog(commands.Cog):
     async def check_news(self):
         seen = load_seen()
         first_run = len(seen) == 0
-        channel = discord.utils.get(self.bot.get_all_channels(), name=NEWS_CHANNEL_NAME)
+        channel = discord.utils.get(self.bot.get_all_channels(), name=load_config()["news_channel"])
         if not channel:
             return
 
