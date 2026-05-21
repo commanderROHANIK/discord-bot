@@ -18,7 +18,5 @@ async def on_message(message):
         return
     await bot.process_commands(message)
 
-with open("token.txt") as f:
-    token = os.getenv("DISCORD_TOKEN")
-
+token = os.getenv("DISCORD_TOKEN")
 bot.run(token)
