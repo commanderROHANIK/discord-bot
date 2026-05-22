@@ -1,4 +1,5 @@
 {
     "news_channel": "news",
-    "alerts_channel": "alerts"
+    "alerts_channel": "alerts",
+    "check_interval_minutes": 15
 }

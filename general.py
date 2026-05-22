@@ -131,6 +131,7 @@ class GeneralCog(commands.Cog):
             "• `!sources` — list active news sources\n"
             "• `!addsource <name> <url>` — add a news source\n"
             "• `!removesource <name>` — remove a news source\n\n"
+            "• `!setcheckinterval <minutes>` — change how often news is checked\n\n"
             "**Other**\n"
             "• `!help` — show this message\n"
         )
