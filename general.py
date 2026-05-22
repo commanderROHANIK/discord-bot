@@ -116,6 +116,25 @@ class GeneralCog(commands.Cog):
         save_feeds(feeds)
         await ctx.send(f"🗑️ Removed source `{name}`.")
 
+    @commands.command()
+    async def help(self, ctx):
+        msg = (
+            "**Available commands:**\n\n"
+            "**System**\n"
+            "• `!status` — CPU, RAM, disk and battery usage\n"
+            "• `!prune [amount]` — delete messages (default 100)\n\n"
+            "**Keywords**\n"
+            "• `!keywords` — list active keywords\n"
+            "• `!addkeyword <keyword>` — add a keyword\n"
+            "• `!removekeyword <keyword>` — remove a keyword\n\n"
+            "**Sources**\n"
+            "• `!sources` — list active news sources\n"
+            "• `!addsource <name> <url>` — add a news source\n"
+            "• `!removesource <name>` — remove a news source\n\n"
+            "**Other**\n"
+            "• `!help` — show this message\n"
+        )
+        await ctx.send(msg)
+
 async def setup(bot):
     await bot.add_cog(GeneralCog(bot))
-    
