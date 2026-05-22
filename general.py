@@ -1,8 +1,27 @@
 import discord
 import psutil
-import news
 import asyncio
+import json
 from discord.ext import commands
+
+KEYWORDS_FILE = "keywords.json"
+FEEDS_FILE = "feeds.json"
+
+def load_keywords():
+    with open(KEYWORDS_FILE) as f:
+        return json.load(f)
+
+def save_keywords(keywords):
+    with open(KEYWORDS_FILE, "w") as f:
+        json.dump(keywords, f)
+
+def load_feeds():
+    with open(FEEDS_FILE) as f:
+        return json.load(f)
+
+def save_feeds(feeds):
+    with open(FEEDS_FILE, "w") as f:
+        json.dump(feeds, f)
 
 class GeneralCog(commands.Cog):
     def __init__(self, bot):
@@ -29,13 +48,73 @@ class GeneralCog(commands.Cog):
             f"{battery_line}"
         )
         await ctx.send(msg)
-        
+
     @commands.command()
     async def prune(self, ctx, amount: int = 100):
         deleted = await ctx.channel.purge(limit=amount)
         msg = await ctx.send(f"Deleted {len(deleted)} messages.")
         await asyncio.sleep(3)
         await msg.delete()
+
+    # --- keyword commands ---
+
+    @commands.command()
+    async def keywords(self, ctx):
+        keywords = load_keywords()
+        if not keywords:
+            await ctx.send("No keywords set.")
+            return
+        await ctx.send("**Active keywords:**\n" + "\n".join(f"• {kw}" for kw in keywords))
+
+    @commands.command()
+    async def addkeyword(self, ctx, *, keyword: str):
+        keywords = load_keywords()
+        if keyword in keywords:
+            await ctx.send(f"`{keyword}` is already in the list.")
+            return
+        keywords.append(keyword)
+        save_keywords(keywords)
+        await ctx.send(f"✅ Added keyword `{keyword}`.")
+
+    @commands.command()
+    async def removekeyword(self, ctx, *, keyword: str):
+        keywords = load_keywords()
+        if keyword not in keywords:
+            await ctx.send(f"`{keyword}` not found.")
+            return
+        keywords.remove(keyword)
+        save_keywords(keywords)
+        await ctx.send(f"🗑️ Removed keyword `{keyword}`.")
+
+    # --- feed/source commands ---
+
+    @commands.command()
+    async def sources(self, ctx):
+        feeds = load_feeds()
+        if not feeds:
+            await ctx.send("No sources set.")
+            return
+        await ctx.send("**Active sources:**\n" + "\n".join(f"• **{name}**: {url}" for name, url in feeds.items()))
+
+    @commands.command()
+    async def addsource(self, ctx, name: str, url: str):
+        feeds = load_feeds()
+        if name in feeds:
+            await ctx.send(f"`{name}` already exists.")
+            return
+        feeds[name] = url
+        save_feeds(feeds)
+        await ctx.send(f"✅ Added source `{name}`.")
+
+    @commands.command()
+    async def removesource(self, ctx, *, name: str):
+        feeds = load_feeds()
+        if name not in feeds:
+            await ctx.send(f"`{name}` not found.")
+            return
+        feeds.pop(name)
+        save_feeds(feeds)
+        await ctx.send(f"🗑️ Removed source `{name}`.")
 
 async def setup(bot):
     await bot.add_cog(GeneralCog(bot))
