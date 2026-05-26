@@ -3,8 +3,18 @@ from discord.ext import commands
 import json
 import os
 from dotenv import load_dotenv
+import psycopg2
+
+def create_seen_table():
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS seen_articles (article_id TEXT PRIMARY KEY)")
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 load_dotenv()
+create_seen_table()
 
 intents = discord.Intents.default()
 intents.message_content = True

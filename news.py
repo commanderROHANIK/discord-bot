@@ -3,9 +3,9 @@ import feedparser
 import json
 import os
 from discord.ext import commands, tasks
+import psycopg2
 
 KEYWORDS_FILE = "keywords.json"
-SEEN_FILE = "seen_articles.json"
 FEEDS_FILE = "feeds.json"
 CONFIG_FILE = "config.json"
 
@@ -17,15 +17,26 @@ def load_feeds():
     with open(FEEDS_FILE) as f:
         return json.load(f)
 
-def load_seen():
-    if os.path.exists(SEEN_FILE):
-        with open(SEEN_FILE) as f:
-            return set(json.load(f))
-    return set()
+def load_seen() -> set[str]:
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM seen_articles")
+    result = set([row[0] for row in cursor.fetchall()])
+    cursor.close()
+    conn.close()
 
-def save_seen(seen):
-    with open(SEEN_FILE, "w") as f:
-        json.dump(list(seen), f)
+    return result
+
+def save_seen(seen: set[str]):
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor()
+
+    for news in seen:
+        cursor.execute("INSERT INTO seen_articles (article_id) VALUES (%s) ON CONFLICT DO NOTHING", (news,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 def load_config():
     with open(CONFIG_FILE) as f:
