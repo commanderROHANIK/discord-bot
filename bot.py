@@ -14,6 +14,7 @@ def create_seen_table():
     conn.close()
 
 load_dotenv()
+print(f"DATABASE_URL: {os.getenv('DATABASE_URL')}")
 create_seen_table()
 
 intents = discord.Intents.default()
