@@ -1,4 +1,3 @@
-import discord
 import psutil
 import asyncio
 import json
